@@ -1,0 +1,84 @@
+### Load packages
+```{r include=FALSE}
+require(DESeq2)
+require(genefilter)
+require(BiocParallel)
+library(openxlsx)
+require(tidyverse)
+```
+
+### Load and prefiltering
+```{r}
+dir <- "../data/se_gene_counts.rds"
+
+se <- readRDS(dir) # Read summarized experiment object
+
+outlier <- "X5_S5_L001"
+
+se <- se[, !(colnames(se) %in% outlier)] # Remove 1 sample failed to cluster
+
+samples <- read.csv("samplesheet.csv", header = TRUE, row.names = 1)
+samples <- samples[!rownames(samples) %in% outlier,] # Remove sampleinfo failed to cluster
+
+coldata <- merge(x = data.frame(colData(se)), y = samples, by=0, all=TRUE, sort = FALSE) %>% tibble::column_to_rownames(., "Row.names") # create coldata 
+
+coldata$Treatment <- coldata$Treatment %>% as.factor() # Set factors for DESeq
+
+countdata <- round(assays(se)[["counts"]]) # Extract counts
+
+dds <- DESeqDataSetFromMatrix(countData = countdata,
+                                 colData = coldata,
+                                 design = ~ 0 + Treatment)
+
+keep <- rowSums(counts(dds) >= 5) >= 4 # Remove genes do not have a count of 5 or more for at least 4 or more samples
+table(keep)
+dds <- dds[keep,]
+```
+
+### Differential Gene expression
+```{r, warning=FALSE}
+register(MulticoreParam(40))
+suppressWarnings(dds <- DESeq(dds, parallel = T))
+
+save(dds, file = "dds.rda")
+```
+
+### Transform counts for data visualization
+```{r}
+rld <- rlog(dds, blind=FALSE)
+vsd <- vst(dds, blind=FALSE)
+
+save(rld, file = "rld.rda")
+save(vsd, file = "vsd.rda")
+```
+
+
+### Results and Annotation
+```{r}
+gendf <- mcols(se) # Get annotation from summarized experiment
+save(gendf, file = "gendf.rda")
+
+result_0.1_vs_6 <- results(dds, contrast = c("Treatment", "0.1_uM_Zinc", "6_uM_Zinc"))
+result_50_vs_6 <- results(dds, contrast = c("Treatment", "50_uM_Zinc", "6_uM_Zinc"))
+result_50_vs_0.1 <- results(dds, contrast = c("Treatment", "50_uM_Zinc", "0.1_uM_Zinc"))
+
+result <- list("0.1_vs_6" = result_0.1_vs_6, "50_vs_6" = result_50_vs_6, "50_vs_0.1" = result_50_vs_0.1)
+
+res <- lapply(result, function(x){
+  cbind(x, symbol = gendf[match(row.names(x), gendf$gene_id), "gene_name"])
+})
+
+save(res, file = "res.rda")
+
+```
+
+### Save to file
+```{r}
+library(openxlsx)
+file <- lapply(res, function(x){
+  tibble::rownames_to_column(as.data.frame(x), "ID")
+})
+
+write.xlsx(file, file = paste0(format(Sys.time(), "%Y-%m-%d"),"_DGE-MTB.xlsx"))
+
+```
