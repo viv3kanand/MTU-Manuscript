@@ -9,7 +9,7 @@ require(tidyverse)
 
 ### Load and prefiltering
 ```{r}
-dir <- "../data/se_gene_counts.rds"
+dir <- "../data/tximport/se_gene_counts.rds"
 
 se <- readRDS(dir) # Read summarized experiment object
 
@@ -40,7 +40,7 @@ dds <- dds[keep,]
 register(MulticoreParam(40))
 suppressWarnings(dds <- DESeq(dds, parallel = T))
 
-save(dds, file = "dds.rda")
+save(dds, file = "../data/rds/dds.rda")
 ```
 
 ### Transform counts for data visualization
@@ -48,8 +48,8 @@ save(dds, file = "dds.rda")
 rld <- rlog(dds, blind=FALSE)
 vsd <- vst(dds, blind=FALSE)
 
-save(rld, file = "rld.rda")
-save(vsd, file = "vsd.rda")
+save(rld, file = "../data/rds/rld.rda")
+save(vsd, file = "../data/rds/vsd.rda")
 ```
 
 
@@ -68,7 +68,7 @@ res <- lapply(result, function(x){
   cbind(x, symbol = gendf[match(row.names(x), gendf$gene_id), "gene_name"])
 })
 
-save(res, file = "res.rda")
+save(res, file = "../data/rds/res.rda")
 
 ```
 

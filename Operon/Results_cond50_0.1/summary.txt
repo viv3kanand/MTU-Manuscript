@@ -1,0 +1,118 @@
+
+Aligning sequencing reads from files:
+	9_S9_L001_R1_001.fastq.gz
+	9_S9_L001_R2_001.fastq.gz
+Total reads:            	2396948
+Successfully aligned reads:	1667804	70%	(>NC_000962.3 Mycobacterium tuberculosis H37Rv, complete genome)
+	Aligning (sense) to protein-coding genes:	2%
+	Aligning (antisense) to protein-coding genes:	19%
+	Aligning (sense) to ribosomal RNAs:	0%
+	Aligning (antisense) to ribosomal RNAs:	0%
+	Aligning (sense) to transfer RNAs:	0%
+	Aligning (antisense) to transfer RNAs:	0%
+	Aligning (sense) to miscellaneous RNAs:	0%
+	Aligning (antisense) to miscellaneous RNAs:	76%
+	Aligning to unannotated regions:        	2%
+
+Aligning sequencing reads from files:
+	6_S6_L001_R1_001.fastq.gz
+	6_S6_L001_R2_001.fastq.gz
+Total reads:            	2786683
+Successfully aligned reads:	2447506	88%	(>NC_000962.3 Mycobacterium tuberculosis H37Rv, complete genome)
+	Aligning (sense) to protein-coding genes:	2%
+	Aligning (antisense) to protein-coding genes:	16%
+	Aligning (sense) to ribosomal RNAs:	0%
+	Aligning (antisense) to ribosomal RNAs:	0%
+	Aligning (sense) to transfer RNAs:	0%
+	Aligning (antisense) to transfer RNAs:	0%
+	Aligning (sense) to miscellaneous RNAs:	0%
+	Aligning (antisense) to miscellaneous RNAs:	80%
+	Aligning to unannotated regions:        	2%
+
+Aligning sequencing reads from files:
+	3_S3_L001_R1_001.fastq.gz
+	3_S3_L001_R2_001.fastq.gz
+Total reads:            	3135741
+Successfully aligned reads:	2697854	86%	(>NC_000962.3 Mycobacterium tuberculosis H37Rv, complete genome)
+	Aligning (sense) to protein-coding genes:	2%
+	Aligning (antisense) to protein-coding genes:	14%
+	Aligning (sense) to ribosomal RNAs:	0%
+	Aligning (antisense) to ribosomal RNAs:	0%
+	Aligning (sense) to transfer RNAs:	0%
+	Aligning (antisense) to transfer RNAs:	0%
+	Aligning (sense) to miscellaneous RNAs:	0%
+	Aligning (antisense) to miscellaneous RNAs:	82%
+	Aligning to unannotated regions:        	2%
+
+Aligning sequencing reads from files:
+	4_S4_L001_R1_001.fastq.gz
+	4_S4_L001_R2_001.fastq.gz
+Total reads:            	3061062
+Successfully aligned reads:	2667646	87%	(>NC_000962.3 Mycobacterium tuberculosis H37Rv, complete genome)
+	Aligning (sense) to protein-coding genes:	1%
+	Aligning (antisense) to protein-coding genes:	12%
+	Aligning (sense) to ribosomal RNAs:	0%
+	Aligning (antisense) to ribosomal RNAs:	0%
+	Aligning (sense) to transfer RNAs:	0%
+	Aligning (antisense) to transfer RNAs:	0%
+	Aligning (sense) to miscellaneous RNAs:	0%
+	Aligning (antisense) to miscellaneous RNAs:	84%
+	Aligning to unannotated regions:        	2%
+
+Aligning sequencing reads from files:
+	2_S2_L001_R1_001.fastq.gz
+	2_S2_L001_R2_001.fastq.gz
+Total reads:            	3124230
+Successfully aligned reads:	1876505	60%	(>NC_000962.3 Mycobacterium tuberculosis H37Rv, complete genome)
+	Aligning (sense) to protein-coding genes:	1%
+	Aligning (antisense) to protein-coding genes:	5%
+	Aligning (sense) to ribosomal RNAs:	0%
+	Aligning (antisense) to ribosomal RNAs:	0%
+	Aligning (sense) to transfer RNAs:	0%
+	Aligning (antisense) to transfer RNAs:	0%
+	Aligning (sense) to miscellaneous RNAs:	0%
+	Aligning (antisense) to miscellaneous RNAs:	93%
+	Aligning to unannotated regions:        	1%
+
+Aligning sequencing reads from files:
+	1_S1_L001_R1_001.fastq.gz
+	1_S1_L001_R2_001.fastq.gz
+Total reads:            	3182976
+Successfully aligned reads:	2759808	87%	(>NC_000962.3 Mycobacterium tuberculosis H37Rv, complete genome)
+	Aligning (sense) to protein-coding genes:	2%
+	Aligning (antisense) to protein-coding genes:	15%
+	Aligning (sense) to ribosomal RNAs:	0%
+	Aligning (antisense) to ribosomal RNAs:	0%
+	Aligning (sense) to transfer RNAs:	0%
+	Aligning (antisense) to transfer RNAs:	0%
+	Aligning (sense) to miscellaneous RNAs:	0%
+	Aligning (antisense) to miscellaneous RNAs:	81%
+	Aligning to unannotated regions:        	2%
+
+Analyzing transcripts...
+
+************************************************************
+
+************************************************************
+
+Computing transcript boundaries...
+	Number of 5'UTRs:			51
+	Number of 3'UTRs:			140
+	Number of predicted RNAs:			317
+	Number of predicted RNAs (not antisense):		13
+	Number of predicted RNAs (antisense):		304
+
+Computing differential gene expression...
+	Number of differentially expressed protein coding genes:	166
+
+Computing likely operons...
+	Number of gene-pairs predicted to be part of the same operon:	1681
+	Number of predicted multi-gene operons:		918
+
+
+Summary of results written to file:	Results_cond50_0.1/summary.txt
+Expression of transcripts written to file:	Results_cond50_0.1/_transcripts.txt
+Operons written to file:		Results_cond50_0.1/_operons.txt
+
+FINISHED.
+
