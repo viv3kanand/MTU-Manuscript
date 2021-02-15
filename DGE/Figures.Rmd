@@ -1,0 +1,179 @@
+### Load packages
+```{r}
+require(DESeq2)
+require(ggpubr)
+requrie(ggplot2)
+require(ComplexHeatmap)
+require(circlize)
+require(dplyr)
+```
+
+### Load rda files
+```{r}
+load("../data/rds/vsd.rda")
+load("../data/rds/operons.rda)
+```
+
+### PCA
+```{r, PCA, fig.height = 5, fig.width = 10, echo = FALSE}
+DESeq2::plotPCA(vsd, c("Treatment")) + 
+  ggforce::geom_mark_ellipse(expand = unit(12, "mm"), show.legend = FALSE) + 
+  scale_x_continuous(limits = c(-15, 25)) + scale_y_continuous(limits = c(-10, 12)) + 
+  labs(fill = "Treatment") + 
+  theme(text = element_text(size = 12, family = "Times New Roman"), 
+        axis.text.x = element_text(size = 12, family = "Times New Roman"), 
+        axis.text.y = element_text(size = 12, family = "Times New Roman"), 
+        axis.title = element_text(size = 12, family = "Times New Roman"), 
+        legend.position = "right")
+```
+
+### Plot MA
+```{r}
+ggpubr::ggmaplot(res$`50_vs_0.1`,fdr = 0.05, fc = 1.1, size = 0.8,
+                 palette = c("#B31B21", "#1465AC", "darkgray"), 
+                 genenames = as.vector(res$`50_vs_0.1`$symbol),
+                 legend = "right", top = 20, 
+                 font.label = c("italic", 12),
+                 #label.rectangle = TRUE,
+                 font.legend = "bold",
+                 font.main = "bold",
+                 ggtheme = ggplot2::theme(text = element_text(size = 12, family = "Times New Roman"), axis.text.x = element_text(size = 12, family = "Times New Roman"), axis.text.y = element_text(size = 12, family = "Times New Roman"),axis.title = element_text(size = 12, family = "Times New Roman"), legend.position = "right"))
+```
+
+### Circos heatmap
+
+#### Defaults
+```{r}
+col_fun1 = colorRamp2(c(-2, 0, 2), c("blue", "white", "red"))
+
+lgd = Legend(title = "Expression", col_fun = col_fun1)
+```
+#### Read data
+```{r}
+data <- assay(vsd)
+```
+
+#### Tidy the data
+```{r}
+rownames(data) <- gendf[match(row.names(data), gendf$gene_id), "gene_name"] #GeneID -> Symbol
+rownames(data) <- gsub(pattern = "^gene-", replacement = "", rownames(data)) #Remove patter "^gene-"
+
+data_operon <- data[rownames(data) %in% operons$Gene,] #subset operon specific genes
+
+data_operon <- data_operon[,order(samples$Condition)] #order samples with condition
+
+data_operon <- data_operon[match(operons$Gene, rownames(data_operon)),] %>% na.omit() #Order genes with operon
+
+colnames(data_operon) <- gsub(pattern = "^X[0-9]_|_L001", replacement = "", colnames(data_operon)) #Tidy sample ID
+```
+
+#### Genes skipped because of quality
+```{r}
+countdata[rownames(countdata) %in% c("gene-Rv0098", "gene-Rv3019c", "gene-Rv3020c", "gene-Rv3904c", "gene-Rv3905c", "gene-Rv0603", "gene-Rv0828c", "gene-Rv2377c"),]
+
+#Gene symbol mapping
+data.frame(gendf[gendf$gene_id %in% c("gene-Rv0098", "gene-Rv3019c", "gene-Rv3020c", "gene-Rv3904c", "gene-Rv3905c", "gene-Rv0603", "gene-Rv0828c", "gene-Rv2377c"),]) %>% tibble
+```
+
+#### Rowmeans Normalization
+```{r}
+# Normalize by group
+mean_data_operon <- data.frame(data_operon) %>% 
+    mutate(Cond_6 = rowMeans(select(.,S8,S2)), 
+           Cond_01 = rowMeans(select(.,S4,S7,S9)), 
+           Cond_50 = rowMeans(select(.,S9,S6,S3))) %>% 
+    select(., Cond_6, Cond_01, Cond_50)
+
+rowmeans_data_operon <- mean_data_operon - rowMeans(mean_data_operon) # Rowmeans normalization
+rowmeans_data_operon <- rowmeans_data_operon %>% relocate(Cond_50, .before = Cond_6) # Relocate columns
+
+# Normalize by sample
+rowmeans_data_operon_sample <- data_operon - rowMeans(data_operon)
+rowmeans_data_operon_sample <- rowmeans_data_operon_sample %>% relocate(c(S9,S6,S3))
+```
+
+### Circos heatmap by group
+```{r}
+png("2020-20-09_Circos_operons_rowMeans_group.png", height = 3000, width = 3000, res = 300)
+
+circos.clear()
+circos.par(gap.after = c(2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,7))
+circos.heatmap(rowmeans_data_operon, 
+    col = col_fun1, 
+    split = factor(operons$Operon), 
+    rownames.side = "outside", 
+    rownames.cex = 0.8, 
+    track.height = 0.5, 
+    cluster = FALSE)
+
+circos.track(track.index = 1, panel.fun = function(x, y) {
+    if(CELL_META$sector.numeric.index == 28) { # the last sector
+      
+        circos.rect(CELL_META$cell.xlim[2] + convert_x(1, "mm"), -4.38,
+                    CELL_META$cell.xlim[2] + convert_x(8, "mm"), -2.98,
+                    col = "orange", border = NA)
+        circos.text(CELL_META$cell.xlim[2] + convert_x(4, "mm"), -3.6,
+                    "0.1uM", cex = 0.8, facing = "clockwise")
+        
+        circos.rect(CELL_META$cell.xlim[2] + convert_x(1, "mm"), -2.98,
+                    CELL_META$cell.xlim[2] + convert_x(8, "mm"), -1.55,
+                    col = "pink", border = NA)
+        circos.text(CELL_META$cell.xlim[2] + convert_x(4, "mm"), -2.25,
+                    "6uM", cex = 0.8, facing = "clockwise")
+        
+        circos.rect(CELL_META$cell.xlim[2] + convert_x(1, "mm"), -1.55,
+                    CELL_META$cell.xlim[2] + convert_x(8, "mm"), -0.15,
+                    col = "lightblue", border = NA)
+        circos.text(CELL_META$cell.xlim[2] + convert_x(4, "mm"), -0.85,
+                    "50uM", cex = 0.8, facing = "clockwise")
+
+    }
+}, bg.border = NA)
+
+grid.draw(lgd)
+
+dev.off()   
+```
+
+### Circos heatmap by sample
+```{r}
+png("2020-20-09_Circos_operons_rowMeans_sample.png", height = 3000, width = 3000, res = 300)
+
+circos.clear()
+circos.par(gap.after = c(2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,7))
+circos.heatmap(rowmeans_data_operon_sample, 
+    col = col_fun1, 
+    split = factor(operons$Operon), 
+    rownames.side = "outside", 
+    rownames.cex = 0.8, 
+    track.height = 0.5, 
+    cluster = FALSE)
+
+circos.track(track.index = 1, panel.fun = function(x, y) {
+    if(CELL_META$sector.numeric.index == 28) { # the last sector
+      
+        circos.rect(CELL_META$cell.xlim[2] + convert_x(1, "mm"), -4.38,
+                    CELL_META$cell.xlim[2] + convert_x(8, "mm"), -2.75,
+                    col = "orange", border = NA)
+        circos.text(CELL_META$cell.xlim[2] + convert_x(4, "mm"), -3.6,
+                    "0.1uM", cex = 0.8, facing = "clockwise")
+        
+        circos.rect(CELL_META$cell.xlim[2] + convert_x(1, "mm"), -2.75,
+                    CELL_META$cell.xlim[2] + convert_x(8, "mm"), -1.7,
+                    col = "pink", border = NA)
+        circos.text(CELL_META$cell.xlim[2] + convert_x(4, "mm"), -2.25,
+                    "6uM", cex = 0.8, facing = "clockwise")
+        
+        circos.rect(CELL_META$cell.xlim[2] + convert_x(1, "mm"), -1.7,
+                    CELL_META$cell.xlim[2] + convert_x(8, "mm"), -0.15,
+                    col = "lightblue", border = NA)
+        circos.text(CELL_META$cell.xlim[2] + convert_x(4, "mm"), -0.85,
+                    "50uM", cex = 0.8, facing = "clockwise")
+
+    }
+}, bg.border = NA)
+
+grid.draw(lgd)
+
+dev.off()
+```
