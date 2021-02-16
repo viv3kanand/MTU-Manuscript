@@ -37,7 +37,12 @@ ggpubr::ggmaplot(res$`50_vs_0.1`,fdr = 0.05, fc = 1.1, size = 0.8,
                  #label.rectangle = TRUE,
                  font.legend = "bold",
                  font.main = "bold",
-                 ggtheme = ggplot2::theme(text = element_text(size = 12, family = "Times New Roman"), axis.text.x = element_text(size = 12, family = "Times New Roman"), axis.text.y = element_text(size = 12, family = "Times New Roman"),axis.title = element_text(size = 12, family = "Times New Roman"), legend.position = "right"))
+                 ggtheme = ggplot2::theme(text = element_text(
+                   size = 12, family = "Times New Roman"), 
+                   axis.text.x = element_text(size = 12, family = "Times New Roman"), 
+                   axis.text.y = element_text(size = 12, family = "Times New Roman"),
+                   axis.title = element_text(size = 12, family = "Times New Roman"), 
+                   legend.position = "right"))
 ```
 
 ### Circos heatmap
@@ -62,7 +67,8 @@ data_operon <- data[rownames(data) %in% operons$Gene,] #subset operon specific g
 
 data_operon <- data_operon[,order(samples$Condition)] #order samples with condition
 
-data_operon <- data_operon[match(operons$Gene, rownames(data_operon)),] %>% na.omit() #Order genes with operon
+data_operon <- data_operon[match(operons$Gene, rownames(data_operon)),] %>% 
+    na.omit() #Order genes with operon
 
 colnames(data_operon) <- gsub(pattern = "^X[0-9]_|_L001", replacement = "", colnames(data_operon)) #Tidy sample ID
 ```
@@ -72,7 +78,8 @@ colnames(data_operon) <- gsub(pattern = "^X[0-9]_|_L001", replacement = "", coln
 countdata[rownames(countdata) %in% c("gene-Rv0098", "gene-Rv3019c", "gene-Rv3020c", "gene-Rv3904c", "gene-Rv3905c", "gene-Rv0603", "gene-Rv0828c", "gene-Rv2377c"),]
 
 #Gene symbol mapping
-data.frame(gendf[gendf$gene_id %in% c("gene-Rv0098", "gene-Rv3019c", "gene-Rv3020c", "gene-Rv3904c", "gene-Rv3905c", "gene-Rv0603", "gene-Rv0828c", "gene-Rv2377c"),]) %>% tibble
+data.frame(gendf[gendf$gene_id %in% c("gene-Rv0098", "gene-Rv3019c", "gene-Rv3020c", "gene-Rv3904c", "gene-Rv3905c", "gene-Rv0603", "gene-Rv0828c", "gene-Rv2377c"),]) %>% 
+    tibble()
 ```
 
 #### Rowmeans Normalization
