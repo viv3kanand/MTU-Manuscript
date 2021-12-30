@@ -13,12 +13,12 @@ dir <- "../data/tximport/se_gene_counts.rds"
 
 se <- readRDS(dir) # Read summarized experiment object
 
-outlier <- "X5_S5_L001"
+#outlier <- "X5_S5_L001"
 
-se <- se[, !(colnames(se) %in% outlier)] # Remove 1 sample failed to cluster
+#se <- se[, !(colnames(se) %in% outlier)] # Remove 1 sample failed to cluster
 
 samples <- read.csv("samplesheet.csv", header = TRUE, row.names = 1)
-samples <- samples[!rownames(samples) %in% outlier,] # Remove sampleinfo failed to cluster
+#samples <- samples[!rownames(samples) %in% outlier,] # Remove sampleinfo failed to cluster
 
 coldata <- merge(x = data.frame(colData(se)), y = samples, by=0, all=TRUE, sort = FALSE) %>% tibble::column_to_rownames(., "Row.names") # create coldata 
 
