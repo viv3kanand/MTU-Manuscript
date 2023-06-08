@@ -13,8 +13,6 @@ This repository documents the RNA-Seq and Operon analysis codes of Mycobacterium
 .
 ├── README.md
 └── data
-│    ├── rds
-│    ├── fastq
 │    └── ann
 │        ├── Extract_ann.R
 │        └── mtuTemp
