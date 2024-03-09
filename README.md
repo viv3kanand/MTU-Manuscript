@@ -2,9 +2,9 @@
 
 Github: [viv3kanand/MTU-Manuscript](https://github.com/viv3kanand/MTU-Manuscript)
 
-DOI: Updated upon publication
+DOI: [https://doi.org/10.1073%2Fpnas.2110293119](https://doi.org/10.1073%2Fpnas.2110293119)
 
-Citation: Updated upon publication
+Citation: Mehdiratta K, Singh S, Sharma S, et al. Kupyaphores are zinc homeostatic metallophores required for colonization of Mycobacterium tuberculosis. Proc Natl Acad Sci U S A. 2022;119(8):e2110293119. doi:10.1073/pnas.2110293119
 
 This repository documents the RNA-Seq and Operon analysis codes of Mycobacterium tuberculosis data.
 
